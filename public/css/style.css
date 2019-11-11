@@ -1,0 +1,16 @@
+nav {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+.active {
+  text-decoration: none;
+  color: #005400;
+}
+.error {
+  color: red;
+  font-size: 12px;
+}
