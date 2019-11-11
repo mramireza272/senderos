@@ -1,6 +1,6 @@
 @extends('templates.master')
 
-@section('titulo', Senderos)
+@section('titulo', 'Senderos')
 
 @section('titulo_pagina', 'Nuevo Usuario')
 
