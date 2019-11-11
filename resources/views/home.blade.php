@@ -32,11 +32,15 @@ var map = L.map('map', {
   scrollWheelZoom:true
 }).setView([19.432603, -99.133206], 11);
 
-var markers = L.layerGroup().addTo(map);
+var camaras = L.layerGroup().addTo(map);
+var sobse = L.layerGroup().addTo(map);
+var mejoramiento = L.layerGroup().addTo(map);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 L.control.scale().addTo(map);
 let layerControl = {
-  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-geo-plus"></i></span> Ubicaciones': markers // an option to show or hide the layer you created from geojson
+  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-monitoring"></i></span> Camaras': camaras,
+  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-geo-plus"></i></span> Senderos SOBSE': sobse,
+  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-geo-plus"></i></span> Senderos Mejoramiento Barrial': mejoramiento // an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
 
