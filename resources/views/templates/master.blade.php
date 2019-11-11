@@ -58,7 +58,7 @@
                             @yield('titulo_pagina')
                         </h1>
                     </div>
-                        @include('templates.breadcrumbs')
+                       
                 </div>
 
                 <div id="page-content">

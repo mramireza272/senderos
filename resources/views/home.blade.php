@@ -30,17 +30,19 @@ var locations = [];
 var map = L.map('map', {
   zoomSnap: 0.25,
   scrollWheelZoom:true
-}).setView([19.432603, -99.133206], 11);
+}).setView([19.432603, -99.133206], 12);
 
+var alcaldia = L.layerGroup().addTo(map);
 var camaras = L.layerGroup().addTo(map);
 var sobse = L.layerGroup().addTo(map);
 var mejoramiento = L.layerGroup().addTo(map);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 L.control.scale().addTo(map);
 let layerControl = {
-  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-monitoring"></i></span> Camaras': camaras,
-  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-geo-plus"></i></span> Senderos SOBSE': sobse,
-  '<span class="icon-wrap icon-wrap-xs icon-circle bg-success"><i class="pli-geo-plus"></i></span> Senderos Mejoramiento Barrial': mejoramiento // an option to show or hide the layer you created from geojson
+  'Alcaldias':alcaldia,
+  'Camaras': camaras,
+  'Senderos SOBSE': sobse,
+  'Senderos Mejoramiento Barrial': mejoramiento // an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
 
@@ -187,7 +189,7 @@ function populate(locations){
   }
 }
 
-var geojson = L.geoJSON([], {
+var geojson = L.geoJSON({!! $polygons !!}, {
         onEachFeature: function (feature, layer) {
             if(feature.properties.Description == 'Alcaldia'){
                 popupContent = '<div id="content">' +
@@ -201,83 +203,19 @@ var geojson = L.geoJSON([], {
                     '</div>' +
                     '</div>';
                 layer.bindPopup(popupContent).addTo(alcaldia);
-            }else if(feature.properties.Description == 'Vialidad'){
+            }else if(feature.properties.Description == 'SOBSE'){
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
                     '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
-                    '<ul><li><b>Vialidad: </b>'+feature.properties.Alcaldia+'</li>'+
-                    '<li><b>Tipo de Vialidad: </b>'+feature.properties.Tipo_vialidad+'</li>'
+                    '<ul><li><b>Tipo: </b>'+feature.properties.tipo+'</li>'+
+                    '<li><b></b>'+feature.properties.Alcaldia+'</li>'
                     '</p>' +
                     '</div>' +
                     '</div>'; 
-                layer.bindPopup(popupContent).addTo(vialidad);
-            }else if(feature.properties.Description == 'Drenaje'){
-                popupContent = '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
-                    '<div id="bodyContent">' +
-                    '<p>' +
-                    '<ul><li><b>Nombre: </b>'+(feature.properties.Alcaldia != null?feature.properties.Alcaldia:'No disponible')+'</li>'+
-                    '<li><b>Tipo: </b>'+(feature.properties.tipo != null?feature.properties.tipo:'No disponible')+'</li>'+
-                    '<li><b>Diametro: </b>'+(feature.properties.diametro != null?feature.properties.diametro:'No disponible')+'</li>'+
-                    '<li><b>Capacidad: </b>'+(feature.properties.capacidad != null?feature.properties.capacidad:'No disponible')+'</li>'+
-                    '<li><b>Profundidad: </b>'+(feature.properties.profundidad != null?feature.properties.profundidad:'No disponible')+'</li>'+
-                    '</p>' +
-                    '</div>' +
-                    '</div>';
-                layer.bindPopup(popupContent).addTo(drenaje); 
-            }else if(feature.properties.Description == 'agua_tratada'){
-                popupContent = '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
-                    '<div id="bodyContent">' +
-                    '<p>' +
-                    '<ul><li><b>Nombre: </b>'+(feature.properties.Alcaldia != null?feature.properties.Alcaldia:'No disponible')+'</li>'+
-                    '</p>' +
-                    '</div>' +
-                    '</div>';
-                layer.bindPopup(popupContent).addTo(aguatratada); 
-            }else if(feature.properties.Description == 'desazolve'){
-                popupContent = '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
-                    '<div id="bodyContent">' +
-                    '<p>' +
-                    '<ul><li><b>Nombre: </b>'+(feature.properties.Alcaldia != null?feature.properties.Alcaldia:'No disponible')+'</li>'+
-                    '</p>' +
-                    '</div>' +
-                    '</div>';
-                layer.bindPopup(popupContent).addTo(desazolve); 
-            }else if(feature.properties.Description == 'hidroneumaticos'){
-                popupContent = '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
-                    '<div id="bodyContent">' +
-                    '<p>' +
-                    '<ul><li><b>Nombre: </b>'+(feature.properties.Alcaldia != null?feature.properties.Alcaldia:'No disponible')+'</li>'+
-                    '</p>' +
-                    '</div>' +
-                    '</div>';
-                layer.bindPopup(popupContent).addTo(hidroneumaticos); 
-            }else if(feature.properties.Description == 'fugas_agua'){
-                popupContent = '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
-                    '<div id="bodyContent">' +
-                    '<p>' +
-                    '<ul><li><b>Nombre: </b>'+(feature.properties.Alcaldia != null?feature.properties.Alcaldia:'No disponible')+'</li>'+
-                    '</p>' +
-                    '</div>' +
-                    '</div>';
-                layer.bindPopup(popupContent).addTo(fugas); 
+                layer.bindPopup(popupContent).addTo(sobse);
             }
 
             layer.bindPopup(popupContent);
@@ -285,12 +223,9 @@ var geojson = L.geoJSON([], {
             switch (feature.properties.Description) {
                 case 'Alcaldia': return {fillColor: "#eeeeee", color: "#000", weight: 3};
                 //case 'Alcaldia':   return {fillColor: "gray", color: "gray", weight: 2, opacity: 1, fillOpacity: 0.35};
-                case 'Vialidad':   return {fillColor: "blue", color: "blue", weight: 2, opacity: 1, fillOpacity: 0.35};
+                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 2, opacity: 1, fillOpacity: 0.35};
                 case 'Drenaje':   return {fillColor: "brown", color: "brown", weight: 4, opacity: 1, fillOpacity: 0.35};
-                case 'agua_tratada':   return {fillColor: "gray", color: "gray", weight: 4, opacity: 1, fillOpacity: 0.35};
-                case 'desazolve':   return {fillColor: "red", color: "red", weight: 4, opacity: 1, fillOpacity: 0.35};
-                case 'hidroneumaticos':   return {fillColor: "yellow", color: "yellow", weight: 4, opacity: 1, fillOpacity: 0.35};
-                case 'fugas_agua':   return {fillColor: "blue", color: "blue", weight: 4, opacity: 1, fillOpacity: 0.35};
+                
             }
         }
 });
