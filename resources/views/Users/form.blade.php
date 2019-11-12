@@ -17,20 +17,6 @@
 				{!! $errors->first('materno', '<small class="help-block text-danger">:message</small>') !!}
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="col-md-3 control-label" for="phone">Número Telefonico*</label>
-			<div class="col-md-4">
-				<input class="form-control" type="text" name="phone" value="{{ $user->phone ?? old('phone')}}" placeholder="Telefono">
-				{!! $errors->first('phone', '<small class="help-block text-danger">:message</small>') !!}
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="col-md-3 control-label" for="name">IMEI*</label>
-			<div class="col-md-4">
-				<input class="form-control" type="text" name="imei" value="{{ $user->imei ?? old('imei')}}" placeholder="IMEI">
-				{!! $errors->first('imei', '<small class="help-block text-danger">:message</small>') !!}
-			</div>
-		</div>
 	<!-- email input-->
 		<div class="form-group">
 			<label class="col-md-3 control-label" for="email">Correo Personal *</label>

@@ -7,9 +7,13 @@ use App\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\UserRequest;
 use DB;
+//log
+use App\Events\EventUserLog;
+use App\Log;
 
 class UserController extends Controller
 {
+    private $event;
     function __construct()
     {
         $this->middleware('auth');
@@ -18,6 +22,7 @@ class UserController extends Controller
         $this->middleware('permission:edit_user')->only(['edit', 'update']);
         $this->middleware('permission:show_user')->only('show');
         $this->middleware('permission:delete_user')->only('destroy');
+        $this->event = collect(['app'=> 'web', 'controller' => 'Usuarios', 'active'=> true, 'host' => url()->current(), 'remote_ip' => \Request::getClientIp(), 'module' => 'Senderos']);
     }
     /**
      * Display a listing of the resource.
@@ -26,6 +31,10 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->event->put('user_id', auth()->user()->id);
+        $this->event->put('type', 'Inicio');
+        event(new EventUserLog($this->event));
+        
         $users = User::where('active', true);
         
         $users = $users->orderBy('name')

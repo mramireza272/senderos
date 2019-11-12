@@ -55,10 +55,14 @@ var alcaldia = L.layerGroup().addTo(map);
 var camaras = L.layerGroup().addTo(map);
 var sobse = L.layerGroup().addTo(map);
 var mejoramiento = L.layerGroup().addTo(map);
+alcaldia.setZIndex(1);
+camaras.setZIndex(2);
+sobse.setZIndex(3);
+mejoramiento.setZIndex(4);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 L.control.scale().addTo(map);
 let layerControl = {
-  'Alcaldias':alcaldia,
+  'Alcaldias (División Geografica)':alcaldia,
   'Camaras': camaras,
   'Senderos SOBSE': sobse,
   'Senderos Mejoramiento Barrial': mejoramiento // an option to show or hide the layer you created from geojson
@@ -79,7 +83,7 @@ function populate(locations){
         popupContent = '<div id="content">' +
           '<div id="siteNotice">' +
           '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial - SACMEX</h4>' +
+          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
           '<div id="bodyContent">' +
           '<p><b>Nombre </b>'+locations[i][3]+'<br>' +
           '<ul>'+
@@ -113,7 +117,7 @@ function populate(locations){
         popupContent = '<div id="content">' +
           '<div id="siteNotice">' +
           '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial - SACMEX</h4>' +
+          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
           '<div id="bodyContent">' +
           '<p><b>'+locations[i][3]+'</b><br>' +
           '<ul>'+
@@ -137,7 +141,7 @@ function populate(locations){
         popupContent = '<div id="content">' +
           '<div id="siteNotice">' +
           '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial - SACMEX</h4>' +
+          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
           '<div id="bodyContent">' +
           '<p><b>'+locations[i][3]+'</b><br>' +
           '<ul>'+
@@ -161,7 +165,7 @@ function populate(locations){
         popupContent = '<div id="content">' +
           '<div id="siteNotice">' +
           '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial - SACMEX</h4>' +
+          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
           '<div id="bodyContent">' +
           '<p><b>'+locations[i][3]+'</b><br>' +
           '<ul>'+
@@ -185,7 +189,7 @@ function populate(locations){
         popupContent = '<div id="content">' +
           '<div id="siteNotice">' +
           '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial - SACMEX</h4>' +
+          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
           '<div id="bodyContent">' +
           '<p><b>'+locations[i][3]+'</b><br>' +
           '<ul>'+
@@ -266,11 +270,11 @@ var geojson = L.geoJSON({!! $polygons !!}, {
             layer.bindPopup(popupContent);
         }, style: function(feature) {
             switch (feature.properties.Description) {
-                case 'Alcaldia': return {fillColor: "#eeeeee", color: "#000", weight: 3};
+                case 'Alcaldia': return {fillColor: "#eeeeee", color: "#000", weight: 2};
                 //case 'Alcaldia':   return {fillColor: "gray", color: "gray", weight: 2, opacity: 1, fillOpacity: 0.35};
-                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 2, opacity: 1, fillOpacity: 0.35};
-                case 'Camaras':   return {fillColor: "red", color: "red", weight: 2, opacity: 1, fillOpacity: 0.35};
-                case 'Mejoramiento':   return {fillColor: "greent", color: "green", weight: 2, opacity: 1, fillOpacity: 0.35};
+                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Camaras':   return {fillColor: "red", color: "red", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Mejoramiento':   return {fillColor: "greent", color: "green", weight: 6, opacity: 1, fillOpacity: 0.35};
                
                 
             }
@@ -324,6 +328,15 @@ function BindItemTable() {
 @endsection
 
 @section('content')
+<div class="panel">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/sibiso-01.png">
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div id="map" style="height: 900px;">
@@ -354,9 +367,6 @@ function BindItemTable() {
 <div class="panel">
   <div class="panel-body">
     <div class="row">
-      <div class="col-md-6">
-        <img width="100%" src="/img/senderos/senderos-05.png">
-      </div>
       <div class="col-md-12">
         <img width="100%" src="/img/senderos/senderos-06.png">
       </div>

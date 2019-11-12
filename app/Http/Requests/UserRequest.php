@@ -39,8 +39,6 @@ class UserRequest extends FormRequest
                     'email'    => 'required|email|same:email_confirmation|max:255|unique:users,email',
                     'password' => 'required|same:password_confirmation',
                     'roles'    => 'required',
-                    'phone'    => 'required|integer',
-                    'imei'     => 'required|integer',
                 ];
             }
             case 'PUT':
@@ -53,8 +51,6 @@ class UserRequest extends FormRequest
                     'email'    => 'required|email|same:email_confirmation|max:255|unique:users,email,'. $this->user_id,
                     'password' => 'required|same:password_confirmation',
                     'roles'    => 'required',
-                    'phone'    => 'required|integer',
-                    'imei'     => 'required|integer',
             ];
             }
             default:break;

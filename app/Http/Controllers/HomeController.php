@@ -10,7 +10,9 @@ use App\SenderoCamaras;
 use App\SenderoMejoramiento;
 use App\MunicipalityMap;
 use App\Sendero;
-
+//log
+use App\Events\EventUserLog;
+use App\Log;
 
 class HomeController extends Controller
 {
@@ -19,9 +21,11 @@ class HomeController extends Controller
      *
      * @return void
      */
+    private $event;
     public function __construct()
     {
         $this->middleware('auth');
+        $this->event = collect(['app'=> 'web', 'controller' => 'Inicio', 'active'=> true, 'host' => url()->current(), 'remote_ip' => \Request::getClientIp(), 'module' => 'Senderos']);
     }
 
     /**
@@ -31,6 +35,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $this->event->put('user_id', auth()->user()->id);
+        $this->event->put('type', 'Inicio');
+        event(new EventUserLog($this->event));
+
         $polygons = $this->getlayers();
         $senderos = Sendero::get();
         return view('home',compact('polygons','senderos'));
