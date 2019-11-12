@@ -70,13 +70,13 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'location' => [
+        'map' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('U_DATABASE', 'forge'),
-            'username' => env('U_USERNAME', 'forge'),
-            'password' => env('U_PASSWORD', ''),
+            'database' => env('MAP_DATABASE', 'forge'),
+            'username' => env('MAP_USERNAME', 'forge'),
+            'password' => env('MAP_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
@@ -84,6 +84,7 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),
