@@ -188,7 +188,7 @@ function populate(locations){
     }
   }
 }
-
+//console.log({!! $polygons !!});
 var geojson = L.geoJSON({!! $polygons !!}, {
         onEachFeature: function (feature, layer) {
             if(feature.properties.Description == 'Alcaldia'){
@@ -216,6 +216,32 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '</div>' +
                     '</div>'; 
                 layer.bindPopup(popupContent).addTo(sobse);
+            }else if(feature.properties.Description == 'Camaras'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
+                    '<li><b></b>'+feature.properties.tipo+'</li>'
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(camaras);
+            }else if(feature.properties.Description == 'Mejoramiento'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
+                    '<li><b></b>'+feature.properties.tipo+'</li>'
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(mejoramiento);
             }
 
             layer.bindPopup(popupContent);
@@ -223,8 +249,10 @@ var geojson = L.geoJSON({!! $polygons !!}, {
             switch (feature.properties.Description) {
                 case 'Alcaldia': return {fillColor: "#eeeeee", color: "#000", weight: 3};
                 //case 'Alcaldia':   return {fillColor: "gray", color: "gray", weight: 2, opacity: 1, fillOpacity: 0.35};
-                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 4, opacity: 1, fillOpacity: 0.35};
-                case 'Drenaje':   return {fillColor: "brown", color: "brown", weight: 4, opacity: 1, fillOpacity: 0.35};
+                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 2, opacity: 1, fillOpacity: 0.35};
+                case 'Camaras':   return {fillColor: "red", color: "red", weight: 2, opacity: 1, fillOpacity: 0.35};
+                case 'Mejoramiento':   return {fillColor: "greent", color: "green", weight: 2, opacity: 1, fillOpacity: 0.35};
+               
                 
             }
         }
