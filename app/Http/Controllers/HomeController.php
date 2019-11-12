@@ -10,6 +10,7 @@ use App\SenderoCamaras;
 use App\SenderoMejoramiento;
 use App\MunicipalityMap;
 use App\Sendero;
+use App\InterseccionSobseMejoramiento;
 //log
 use App\Events\EventUserLog;
 use App\Log;
@@ -70,6 +71,33 @@ class HomeController extends Controller
 
                                             ];
                                         })->toArray();
+        $interseccion = InterseccionSobseMejoramiento::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'Interseccion',
+                                        'perfil' => 'Intersección SOBSE - Mejoramiento',
+                                        'tipo' => $i->tipo,
+                                        'estatus' => $i->estatus,
+                                        'num' => $i->num,
+                                        'nombre' => $i->nombre,
+                                        'ubicacion' => $i->ubicacion,
+                                        'ubicacion2' => $i->ubicacion2,
+                                        'long' => $i->long,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray();
         $sobse = SenderoSobse::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
@@ -146,7 +174,7 @@ class HomeController extends Controller
 
         $polygons = json_encode([
             'type'     => 'FeatureCollection',
-            'features' => array_merge($sobse,$alcaldias,$camaras,$mejoramiento),
+            'features' => array_merge($sobse,$alcaldias,$camaras,$mejoramiento,$interseccion),
         ]);
 
         return $polygons;

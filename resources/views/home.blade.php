@@ -52,6 +52,7 @@ var map = L.map('map', {
 }).setView([19.432603, -99.133206], 12);
 
 var alcaldia = L.layerGroup();
+var interseccion = L.layerGroup().addTo(map);
 var camaras = L.layerGroup().addTo(map);
 var sobse = L.layerGroup().addTo(map);
 var mejoramiento = L.layerGroup().addTo(map);
@@ -65,7 +66,8 @@ let layerControl = {
   'Alcaldias (División Geografica)':alcaldia,
   'Cámaras': camaras,
   'Senderos SOBSE': sobse,
-  'Senderos Mejoramiento Barrial': mejoramiento // an option to show or hide the layer you created from geojson
+  'Senderos Mejoramiento Barrial': mejoramiento,
+  'Intersección SOBSE - Mejoramiento': interseccion // an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
 
@@ -153,8 +155,25 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '</div>' +
                     '</div>';
                 layer.bindPopup(popupContent).addTo(alcaldia);
+            }else if(feature.properties.Description == 'Interseccion'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li>'+feature.properties.perfil+'</li>'+
+                    '<li><b>Tipo: </b>'+feature.properties.tipo+'</li>'+
+                    '<li><b>Estatus: </b>'+feature.properties.estatus+'</li>'+
+                    '<li><b>Número: </b>'+feature.properties.num+'</li>'+
+                    '<li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
+                    '<li><b>Ubicación: </b>'+feature.properties.ubicacion+'</li>'+
+                    '<li><b>Longitud: </b>'+feature.properties.long+' Kms.</li>'+
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(interseccion);
             }else if(feature.properties.Description == 'SOBSE'){
-              console.log(feature.properties.long);
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
@@ -209,7 +228,8 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 //case 'Alcaldia':   return {fillColor: "gray", color: "gray", weight: 2, opacity: 1, fillOpacity: 0.35};
                 case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'Camaras':   return {fillColor: "red", color: "red", weight: 6, opacity: 1, fillOpacity: 0.35};
-                case 'Mejoramiento':   return {fillColor: "greent", color: "green", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Mejoramiento':   return {fillColor: "green", color: "green", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Interseccion':   return {fillColor: "yellow", color: "yellow", weight: 6, opacity: 1, fillOpacity: 0.35};
                
                 
             }
