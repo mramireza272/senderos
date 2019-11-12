@@ -458,3 +458,4 @@
 #75 C:\\laragon\\www\\senderos\\public\\index.php(55): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #76 {main}
 "} 
+[2019-11-11 15:00:07] local.ERROR: SQLSTATE[08006] [7] FATAL:  no existe la base de datos «dev_sendero» (SQL: select * from information_schema.tables where table_schema = public and table_name = migrations)  
