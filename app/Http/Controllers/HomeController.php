@@ -9,6 +9,7 @@ use App\SenderoSobse;
 use App\SenderoCamaras;
 use App\SenderoMejoramiento;
 use App\MunicipalityMap;
+use App\Sendero;
 
 
 class HomeController extends Controller
@@ -31,7 +32,8 @@ class HomeController extends Controller
     public function index()
     {
         $polygons = $this->getlayers();
-        return view('home',compact('polygons'));
+        $senderos = Sendero::get();
+        return view('home',compact('polygons','senderos'));
     }
 
     public function menu(){

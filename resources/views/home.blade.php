@@ -2,10 +2,21 @@
 @section('titulo', 'Senderos')
 
 @section('customcss')
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<link href="/plugins/datatables/media/css/dataTables.bootstrap.min.css">
+<link href="/plugins/datatables/extensions/Responsive/css/responsive.dataTables.min.css">
+<link href="/plugins/datatables/extensions/Buttons/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
 <link rel="stylesheet" href="/plugins/leaflet/leaflet.css" />
 <link rel="stylesheet" href="/plugins/leaflet/Control.FullScreen.css"/>
 <style>
+  table td {
+        word-wrap: break-word;
+        max-width: 400px;
+    }
+    #example td {
+        white-space:inherit;
+    }
     div#capas {
         position: absolute;
         top: 5px;
@@ -24,6 +35,14 @@
 @section('customjs')
 <script src="/plugins/leaflet/leaflet.js"></script>
 <script src="/plugins/leaflet/Control.FullScreen.js"></script>
+<script src="/plugins/datatables/media/js/jquery.dataTables.js"></script>
+<script src="/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+<script src="/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js "></script>
 <script type="text/javascript">
 //maps
 var locations = [];
@@ -257,6 +276,50 @@ var geojson = L.geoJSON({!! $polygons !!}, {
             }
         }
 });
+var today = new Date();
+var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+$(document).ready(function() {
+  BindItemTable();
+});
+function BindItemTable() {
+    myTable = $('#incidentes').DataTable({
+        "destroy": true,
+        "processing": true,
+        "deferRender": true,
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "dom": 'lBfrtip',
+        "buttons": [
+            {
+                extend: 'excelHtml5',
+                title: 'Senderos '+ date,
+                footer: true,
+                messageTop: 'Fecha de descarga '+ dateTime
+            },
+            {
+                extend: 'csvHtml5',
+                title: 'Senderos '+ date,
+                footer: true,
+                messageTop: 'Fecha de descarga '+ dateTime
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Senderos '+ date,
+                footer: true,
+                messageTop: 'Fecha de descarga '+ dateTime
+            }
+        ]
+    });
+}
 </script>
 @endsection
 
@@ -329,6 +392,58 @@ var geojson = L.geoJSON({!! $polygons !!}, {
         <img width="100%" src="/img/senderos/senderos-14.png">
       </div>
     </div>
+  </div>
+</div>
+<br>
+<br>
+<div class="panel">
+  <div class="panel-body">
+    <div class="row">
+            <div class="col-lg-12">             
+                <div class="form-group table-responsive">
+                    <table id="incidentes" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Responsable</th>
+                                <th>Sendero</th>
+                                <th>Alcaldía</th>
+                                <th>Colonia</th>
+                                <th>Entre Calles</th>
+                                <th>Fecha de inauguración</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data">
+                            @foreach($senderos as $sendero)
+                            <tr>
+                              <td>{{ $sendero->id }}</td>
+                              <td>{{ $sendero->responsable }}</td>
+                              <td>{{ $sendero->sendero }}</td>
+                              <td>{{ $sendero->alcaldia }}</td>
+                              <td>{{ $sendero->colonia }}</td>
+                              <td>{{ $sendero->entrecalles }}</td>
+                              <td>{{ $sendero->inaugurar }}</td>
+                              <td>{{ $sendero->estatus }}</td>
+                            </tr>                              
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Responsable</th>
+                                <th>Sendero</th>
+                                <th>Alcaldía</th>
+                                <th>Colonia</th>
+                                <th>Entre Calles</th>
+                                <th>Fecha de inauguración</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
   </div>
 </div>
 @endsection
