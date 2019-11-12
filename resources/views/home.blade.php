@@ -223,7 +223,7 @@ var geojson = L.geoJSON({!! $polygons !!}, {
             switch (feature.properties.Description) {
                 case 'Alcaldia': return {fillColor: "#eeeeee", color: "#000", weight: 3};
                 //case 'Alcaldia':   return {fillColor: "gray", color: "gray", weight: 2, opacity: 1, fillOpacity: 0.35};
-                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 2, opacity: 1, fillOpacity: 0.35};
+                case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 4, opacity: 1, fillOpacity: 0.35};
                 case 'Drenaje':   return {fillColor: "brown", color: "brown", weight: 4, opacity: 1, fillOpacity: 0.35};
                 
             }
