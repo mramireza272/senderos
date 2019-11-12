@@ -7175,8 +7175,8 @@ blockquote {
 }
 .btn-primary,
 .btn-primary:focus {
-  background-color: #294f75;
-  border-color: #25476a !important;
+  background-color: #006847;
+  border-color: #006847 !important;
   color: #fff;
 }
 .btn-primary:hover,
@@ -7199,8 +7199,8 @@ blockquote {
 .btn-active-primary + .dropdown-menu > .active > a,
 .open .dropdown-toggle.btn.btn-active-primary,
 .btn-group.open .dropdown-toggle.btn.btn-active-primary {
-  background-color: #1c3550 !important;
-  border-color: #1c3550 !important;
+  background-color: #006847 !important;
+  border-color: #006847 !important;
   color: #fff !important;
 }
 .btn-info,
@@ -8161,7 +8161,7 @@ blockquote {
   color: inherit;
 }
 .bg-primary {
-  background-color: #25476a;
+  background-color: #00353a;
 }
 .bg-primary,
 .bg-primary a {
@@ -8172,7 +8172,7 @@ blockquote {
   color: #fff;
 }
 .bg-info {
-  background-color: #03a9f4;
+  background-color: #00353a;
 }
 .bg-info,
 .bg-info a {
@@ -8274,7 +8274,7 @@ a.text-muted:focus {
 .text-primary,
 a.text-primary:hover,
 a.text-primary:focus {
-  color: #1c3550;
+  color: #006847;
 }
 .text-info,
 a.text-info:hover,
