@@ -14,13 +14,7 @@ class LogController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->has('date')){dd($request->all());
-            $log = Log::whereDate('created_at',$request->date)
-                        ->get();
-        }else{
-            $log = []; 
-        }
-
+        $log = Log::orderBy('created_at', 'desc')->get();
         return \View::make('Log.index')->with(compact('log'));
     }
 
