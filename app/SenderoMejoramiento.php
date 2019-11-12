@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class SenderoMejoramiento extends Model
 {
     protected $connection = 'map';
-    protected $table = 'senderomejoramientobarrial';
+    protected $table = 'senderosmejoramientobarrial';
 }
