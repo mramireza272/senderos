@@ -70,7 +70,7 @@ class HomeController extends Controller
 
                                             ];
                                         })->toArray();
-        $sobse = SenderoSobse::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo')
+        $sobse = SenderoSobse::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
                                 $id = 'mun_'.str_random(10);
@@ -81,8 +81,14 @@ class HomeController extends Controller
                                     'properties' => [
                                         'fillOpacity'=> '0.35',
                                         'Description' => 'SOBSE',
-                                        'tipo' => 'Senderos SOBSE',
-                                        'Alcaldia' => $i->tipo,
+                                        'perfil' => 'Senderos SOBSE',
+                                        'tipo' => $i->tipo,
+                                        'estatus' => $i->estatus,
+                                        'num' => $i->num,
+                                        'nombre' => $i->nombre,
+                                        'ubicacion' => $i->ubicacion,
+                                        'ubicacion2' => $i->ubicacion2,
+                                        'long' => $i->long,
                                     ],
                                     'geometry'  => [
                                         'type'        => 'MultiLineString',
@@ -92,7 +98,7 @@ class HomeController extends Controller
                                 ];
                             })->toArray();
 
-        $camaras = SenderoCamaras::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nombre')
+        $camaras = SenderoCamaras::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nombre','tipo_p')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
                                 $id = 'mun_'.str_random(10);
@@ -104,7 +110,7 @@ class HomeController extends Controller
                                         'fillOpacity'=> '0.35',
                                         'Description' => 'Camaras',
                                         'tipo' => 'Senderos Cámaras',
-                                        'nombre' => $i->nombre,
+                                        'nombre' => $i->tipo_p,
                                     ],
                                     'geometry'  => [
                                         'type'        => 'Point',
@@ -114,7 +120,7 @@ class HomeController extends Controller
                                 ];
                             })->toArray();
 
-        $mejoramiento = SenderoMejoramiento::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nomvial')
+        $mejoramiento = SenderoMejoramiento::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nomvial','sentido','tipovial')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
                                 $id = 'mun_'.str_random(10);
@@ -125,8 +131,10 @@ class HomeController extends Controller
                                     'properties' => [
                                         'fillOpacity'=> '0.35',
                                         'Description' => 'Mejoramiento',
-                                        'tipo' => 'Senderos Mejoramiento',
-                                        'nombre' => $i->nomvial,
+                                        'perfil' => 'Senderos Mejoramiento',
+                                        'nomvial' => $i->nomvial,
+                                        'sentido' => $i->sentido,
+                                        'tipovial' => $i->tipovial,
                                     ],
                                     'geometry'  => [
                                         'type'        => 'MultiLineString',
@@ -135,7 +143,7 @@ class HomeController extends Controller
 
                                 ];
                             })->toArray();
-        //dd($camaras);
+
         $polygons = json_encode([
             'type'     => 'FeatureCollection',
             'features' => array_merge($sobse,$alcaldias,$camaras,$mejoramiento),

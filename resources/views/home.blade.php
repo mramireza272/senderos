@@ -51,19 +51,19 @@ var map = L.map('map', {
   scrollWheelZoom:true
 }).setView([19.432603, -99.133206], 12);
 
-var alcaldia = L.layerGroup().addTo(map);
+var alcaldia = L.layerGroup();
 var camaras = L.layerGroup().addTo(map);
 var sobse = L.layerGroup().addTo(map);
 var mejoramiento = L.layerGroup().addTo(map);
 alcaldia.setZIndex(1);
 camaras.setZIndex(2);
-sobse.setZIndex(3);
+sobse.setZIndex(5);
 mejoramiento.setZIndex(4);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 L.control.scale().addTo(map);
 let layerControl = {
   'Alcaldias (División Geografica)':alcaldia,
-  'Camaras': camaras,
+  'Cámaras': camaras,
   'Senderos SOBSE': sobse,
   'Senderos Mejoramiento Barrial': mejoramiento // an option to show or hide the layer you created from geojson
 }
@@ -112,78 +112,6 @@ function populate(locations){
         L.marker([locations[i][1],locations[i][2]], {icon: greenIcon})
           .bindPopup(popupContent)
           .addTo(markers);
-    }else if(locations[i][0] == 'Report'){
-        $color = 'info';
-        popupContent = '<div id="content">' +
-          '<div id="siteNotice">' +
-          '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
-          '<div id="bodyContent">' +
-          '<p><b>'+locations[i][3]+'</b><br>' +
-          '<ul>'+
-          '<li><b>Estatus: </b>'+locations[i][4]+'</li>' +
-          '<li><b>Fecha de Alta: </b>'+locations[i][6]+'</li>' +
-          '<li><b>Folio de Incidente: </b>'+locations[i][7]+'</li>' +
-          locations[i][8]+
-          '</p>' +
-          '</div>' +
-          '</div>';
-        var greenIcon = L.divIcon({html: ' <span class="icon-wrap icon-wrap-xs icon-circle bg-'+$color+'"><i class="'+locations[i][5]+' icon-2x"></i></span>',
-                            iconSize: [20, 20],
-                            className: 'leaflet-div-icon'
-                    });
-
-        L.marker([locations[i][1],locations[i][2]], {icon: greenIcon})
-          .bindPopup(popupContent)
-          .addTo(reports);
-    }else if(locations[i][0] == 'Incident'){
-        $color = 'warning';
-        popupContent = '<div id="content">' +
-          '<div id="siteNotice">' +
-          '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
-          '<div id="bodyContent">' +
-          '<p><b>'+locations[i][3]+'</b><br>' +
-          '<ul>'+
-          '<li><b>Estatus: </b>'+locations[i][4]+'</li>' +
-          '<li><b>Fecha de Alta: </b>'+locations[i][6]+'</li>' +
-          '<li><b>Folio de Incidente: </b>'+locations[i][7]+'</li>' +
-          locations[i][8]+
-          '</p>' +
-          '</div>' +
-          '</div>';
-        var greenIcon = L.divIcon({html: ' <span class="icon-wrap icon-wrap-xs icon-circle bg-'+$color+'"><i class="'+locations[i][5]+' icon-2x"></i></span>',
-                            iconSize: [20, 20],
-                            className: 'leaflet-div-icon'
-                    });
-
-        L.marker([locations[i][1],locations[i][2]], {icon: greenIcon})
-          .bindPopup(popupContent)
-          .addTo(incidents);
-    }else if(locations[i][0] == 'Validation'){
-        $color = 'danger';
-        popupContent = '<div id="content">' +
-          '<div id="siteNotice">' +
-          '</div>' +
-          '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
-          '<div id="bodyContent">' +
-          '<p><b>'+locations[i][3]+'</b><br>' +
-          '<ul>'+
-          '<li><b>Estatus: </b>'+locations[i][4]+'</li>' +
-          '<li><b>Fecha de Alta: </b>'+locations[i][6]+'</li>' +
-          '<li><b>Folio de Incidente: </b>'+locations[i][7]+'</li>' +
-          locations[i][8]+
-          '</p>' +
-          '</div>' +
-          '</div>';
-        var greenIcon = L.divIcon({html: ' <span class="icon-wrap icon-wrap-xs icon-circle bg-'+$color+'"><i class="'+locations[i][5]+' icon-2x"></i></span>',
-                            iconSize: [20, 20],
-                            className: 'leaflet-div-icon'
-                    });
-
-        L.marker([locations[i][1],locations[i][2]], {icon: greenIcon})
-          .bindPopup(popupContent)
-          .addTo(validations);
     }else{
       $color = 'danger';
         popupContent = '<div id="content">' +
@@ -211,14 +139,13 @@ function populate(locations){
     }
   }
 }
-//console.log({!! $polygons !!});
 var geojson = L.geoJSON({!! $polygons !!}, {
         onEachFeature: function (feature, layer) {
             if(feature.properties.Description == 'Alcaldia'){
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
                     '<ul><li><b>Alcaldía: </b>'+feature.properties.Alcaldia+'</li>' +
@@ -227,14 +154,20 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '</div>';
                 layer.bindPopup(popupContent).addTo(alcaldia);
             }else if(feature.properties.Description == 'SOBSE'){
+              console.log(feature.properties.long);
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
-                    '<ul><li><b>Tipo: </b>'+feature.properties.tipo+'</li>'+
-                    '<li><b></b>'+feature.properties.Alcaldia+'</li>'
+                    '<ul><li>'+feature.properties.perfil+'</li>'+
+                    '<li><b>Tipo: </b>'+feature.properties.tipo+'</li>'+
+                    '<li><b>Estatus: </b>'+feature.properties.estatus+'</li>'+
+                    '<li><b>Número: </b>'+feature.properties.num+'</li>'+
+                    '<li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
+                    '<li><b>Ubicación: </b>'+feature.properties.ubicacion+'</li>'+
+                    '<li><b>Longitud: </b>'+feature.properties.long+' Kms.</li>'+
                     '</p>' +
                     '</div>' +
                     '</div>'; 
@@ -243,11 +176,11 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
-                    '<ul><li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
-                    '<li><b></b>'+feature.properties.tipo+'</li>'
+                    '<ul><li>'+feature.properties.tipo+'</li>'+
+                    '<li><b>Ubicación: </b>'+feature.properties.nombre+'</li>'
                     '</p>' +
                     '</div>' +
                     '</div>'; 
@@ -256,11 +189,13 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Seguimiento Territorial | SACMEX</h4>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
-                    '<ul><li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
-                    '<li><b></b>'+feature.properties.tipo+'</li>'
+                    '<ul><li>'+feature.properties.perfil+'</li>'+
+                    '<li><b>Vialidad: </b>'+feature.properties.nomvial+'</li>'+
+                    '<li><b>Sentido: </b>'+feature.properties.sentido+'</li>'+
+                    '<li><b>Tipo de Vialidad: </b>'+feature.properties.tipovial+'</li>'+
                     '</p>' +
                     '</div>' +
                     '</div>'; 
@@ -348,9 +283,6 @@ function BindItemTable() {
 <div class="panel">
   <div class="panel-body">
     <div class="row">
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/sibiso-01.png">
-      </div>
       <div class="col-md-12">
         <img width="100%" src="/img/senderos/sibiso-02.png">
       </div>
