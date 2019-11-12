@@ -267,4 +267,68 @@ var geojson = L.geoJSON({!! $polygons !!}, {
         </div>
     </div>
 </div>
+<br>
+<br>
+<div class="panel">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/sibiso-01.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/sibiso-02.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/sibiso-03.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/sibiso-04.png">
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="panel">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        <img width="100%" src="/img/senderos/senderos-05.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-06.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-07.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-08.png">
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="panel">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        <img width="100%" src="/img/senderos/senderos-09.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-10.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-11.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-12.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-13.png">
+      </div>
+      <div class="col-md-12">
+        <img width="100%" src="/img/senderos/senderos-14.png">
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
