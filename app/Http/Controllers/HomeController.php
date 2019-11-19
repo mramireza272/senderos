@@ -42,7 +42,12 @@ class HomeController extends Controller
 
         $polygons = $this->getlayers();
         $senderos = Sendero::get();
-        return view('home',compact('polygons','senderos'));
+        $alcaldias = $senderos->sortBy('alcaldia')->pluck('alcaldia')->unique()->values()->filter(function($i){
+            return $i != " ";
+        });
+        $responsables = $senderos->sortBy('responsable')->pluck('responsable')->unique()->values();
+        $statuses = $senderos->sortBy('estatus')->pluck('estatus')->unique()->values();
+        return view('home',compact('polygons','senderos','alcaldias','responsables','statuses'));
     }
 
     public function menu(){
@@ -178,6 +183,20 @@ class HomeController extends Controller
         ]);
 
         return $polygons;
+    }
+
+    public function filtros(Sendero $senderos, Request $request){
+        if(!is_null($request->responsable)){
+            $senderos = $senderos->where('responsable','like','%'.$request->responsable.'%');
+        }
+        if(!is_null($request->alcaldia)){
+            $senderos = $senderos->where('alcaldia','like','%'.$request->alcaldia.'%');
+        }
+        if(!is_null($request->estatus)){
+            $senderos = $senderos->where('estatus','like','%'.$request->estatus.'%');
+        }
+        $senderos = $senderos->get();
+        return $senderos;
     }
 
 }

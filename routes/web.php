@@ -15,6 +15,8 @@ Auth::routes();
 Route::auth();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/home', 'HomeController@index')->name('home');
+Route::post('/home/filtros', ['as' => 'home.filtros', 'uses' => 'HomeController@filtros']);
 Route::resource('roles', 'RolesController');
 Route::resource('permisos', 'PermissionsController');
 Route::resource('bitacora', 'LogController');

@@ -2,6 +2,7 @@
 @section('titulo', 'Senderos')
 
 @section('customcss')
+<link href="/plugins/select2/css/select2.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 <link href="/plugins/datatables/media/css/dataTables.bootstrap.min.css">
 <link href="/plugins/datatables/extensions/Responsive/css/responsive.dataTables.min.css">
@@ -43,6 +44,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js "></script>
+<script src="/plugins/select2/js/select2.min.js"></script>
+<script src="/plugins/select2/js/i18n/es.js"></script>
 <script type="text/javascript">
 //maps
 var locations = [];
@@ -63,11 +66,11 @@ mejoramiento.setZIndex(4);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 L.control.scale().addTo(map);
 let layerControl = {
-  'Alcaldias (División Geografica)':alcaldia,
+  '<span style="color: black; font-size: 20px"><b>─</b> </span> Alcaldias (División Geografica)':alcaldia,
   'Cámaras': camaras,
-  'Senderos SOBSE': sobse,
-  'Senderos Mejoramiento Barrial': mejoramiento,
-  'Intersección SOBSE - Mejoramiento': interseccion // an option to show or hide the layer you created from geojson
+  '<span style="color: blue; font-size: 20px"><b>─</b> </span> Senderos SOBSE': sobse,
+  '<span style="color: green; font-size: 20px"><b>─</b> </span> Senderos Mejoramiento Barrial': mejoramiento,
+  '<span style="color: red; font-size: 20px"><b>─</b> </span> Intersección SOBSE - Mejoramiento': interseccion // an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
 
@@ -227,9 +230,9 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 case 'Alcaldia': return {fillColor: "#eeeeee", color: "#000", weight: 2};
                 //case 'Alcaldia':   return {fillColor: "gray", color: "gray", weight: 2, opacity: 1, fillOpacity: 0.35};
                 case 'SOBSE':   return {fillColor: "blue", color: "blue", weight: 6, opacity: 1, fillOpacity: 0.35};
-                case 'Camaras':   return {fillColor: "red", color: "red", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Camaras':   return {fillColor: "brown", color: "brown", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'Mejoramiento':   return {fillColor: "green", color: "green", weight: 6, opacity: 1, fillOpacity: 0.35};
-                case 'Interseccion':   return {fillColor: "yellow", color: "yellow", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Interseccion':   return {fillColor: "red", color: "red", weight: 6, opacity: 1, fillOpacity: 0.35};
                
                 
             }
@@ -239,9 +242,7 @@ var today = new Date();
 var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 var dateTime = date+' '+time;
-$(document).ready(function() {
-  BindItemTable();
-});
+
 function BindItemTable() {
     myTable = $('#incidentes').DataTable({
         "destroy": true,
@@ -279,18 +280,128 @@ function BindItemTable() {
         ]
     });
 }
+
+function filtros(){
+  var parametros       = {};
+  parametros['_token'] = '{{ csrf_token() }}';
+  parametros['responsable'] = $('#responsable').val();
+  parametros['alcaldia'] = $('#alcaldia').val();
+  parametros['estatus'] = $('#estatus').val();
+  $.ajax({
+      url:        '{{ url("/home/filtros") }}',
+      data:       parametros, 
+      type:       'post',
+      dataType:   'json',
+      success: function (response) {
+          myTable.clear();
+          
+          var result = response.map(function (item) {
+              var result = [];
+              result.push(item.id);
+              result.push(item.responsable);
+              result.push(item.sendero);
+              result.push(item.alcaldia);
+              result.push(item.colonia);
+              result.push(item.entrecalles);
+              result.push(item.inaugurar);
+              result.push(item.estatus);
+              return result;
+          });
+          myTable.rows.add(result);
+          myTable.draw();
+      }
+  });
+}
+$(document).ready(function() {
+  BindItemTable();
+  $(".select2").select2({
+        placeholder: "Selecciona una opción",
+        allowClear: true,
+        language: 'es',
+        width:'100%'
+    }).on("select2:select", function (e) {
+        filtros();
+    }).on("select2:unselect", function (e) {
+        $(this).val(null);
+        filtros();
+    });
+});
 </script>
 @endsection
 
 @section('content')
-<div class="panel">
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/sibiso-01.png">
-      </div>
+<div class="tab-base tab-stacked-left">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#stk-lft-tab-1" aria-expanded="true">Inicio</a>
+        </li>
+        <li class="">
+            <a data-toggle="tab" href="#stk-lft-tab-2" aria-expanded="false">Senderos de la  Secretaría de Obras y Servicios</a>
+        </li>
+        <li class="">
+            <a data-toggle="tab" href="#stk-lft-tab-3" aria-expanded="false">Senderos Mejoramiento Barrial</a>
+        </li>
+        <li class="">
+            <a data-toggle="tab" href="#stk-lft-tab-4" aria-expanded="false">Alcaldías</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div id="stk-lft-tab-1" class="tab-pane fade active in">
+            <div class="row">
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/sibiso-01.png">
+              </div>
+            </div>
+        </div>
+        <div id="stk-lft-tab-3" class="tab-pane fade">
+            <div class="row">
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/sibiso-02.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/sibiso-03.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/sibiso-04.png">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-06.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-07.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-08.png">
+              </div>
+            </div>
+        </div>
+        <div id="stk-lft-tab-2" class="tab-pane fade">
+            <div class="row">
+              <div class="col-md-6">
+                <img width="100%" src="/img/senderos/senderos-09.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-10.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-11.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-12.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-13.png">
+              </div>
+              <div class="col-md-12">
+                <img width="100%" src="/img/senderos/senderos-14.png">
+              </div>
+            </div>
+        </div>
+        <div id="stk-lft-tab-4" class="tab-pane fade">
+        </div>
     </div>
-  </div>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -299,67 +410,41 @@ function BindItemTable() {
     </div>
 </div>
 <br>
-<br>
 <div class="panel">
   <div class="panel-body">
     <div class="row">
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/sibiso-02.png">
+      <div class="col-md-2"> 
+        <select class="form-control select2" data-placeholder="Selecciona un responsable" name="responsable" id="responsable">
+            <option value=""></option>
+            @foreach($responsables as $responsable)
+                <option value="{{$responsable}}">
+                    {{ $responsable }}
+                </option>
+            @endforeach
+        </select>
       </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/sibiso-03.png">
+      <div class="col-md-2"> 
+        <select class="form-control select2" data-placeholder="Selecciona Alcaldía" name="alcaldia" id="alcaldia">
+            <option value=""></option>
+            @foreach($alcaldias as $alcaldia)
+                <option value="{{$alcaldia}}">
+                    {{ $alcaldia }}
+                </option>
+            @endforeach
+        </select>
       </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/sibiso-04.png">
-      </div>
-    </div>
-  </div>
-</div>
-<br>
-<div class="panel">
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-06.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-07.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-08.png">
-      </div>
-    </div>
-  </div>
-</div>
-<br>
-<div class="panel">
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-6">
-        <img width="100%" src="/img/senderos/senderos-09.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-10.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-11.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-12.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-13.png">
-      </div>
-      <div class="col-md-12">
-        <img width="100%" src="/img/senderos/senderos-14.png">
+      <div class="col-md-2"> 
+        <select class="form-control select2" data-placeholder="Selecciona un estatus" name="estatus" id="estatus">
+            <option value=""></option>
+            @foreach($statuses as $status)
+                <option value="{{$status}}">
+                    {{ $status }}
+                </option>
+            @endforeach
+        </select>
       </div>
     </div>
-  </div>
-</div>
-<br>
-<br>
-<div class="panel">
-  <div class="panel-body">
+    <br>
     <div class="row">
             <div class="col-lg-12">             
                 <div class="form-group table-responsive">
