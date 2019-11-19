@@ -38,8 +38,8 @@
     <!-- Page content -->
     <div class="container mt--1 pb-8">
       <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-5">
-          <div class="card bg-secondary border-0 mb-0">
+        <div class="col-md-5 col-lg-4">
+          <div class="card bg-dark border-0 mb-0">
             <div class="card-header bg- pb-5">
               <div class="btn-wrapper text-center">
               <img src="/img/logos/logo.png" class="img-responsive">
@@ -47,12 +47,11 @@
             </div>
             <div class="card-body px-lg-7 py-lg-5">
               <div class="text-center text-muted mb-4">					
-					<div class="text-center text-muted mb-4">
-		                <h1 style="font-size:40px">Senderos</h1>
-		                <p style="font-size:20px">Ingrese sus credenciales</p>
+					<div class="text-center text-muted mb-3">
+		                <h1 style="font-size:32px; color: #ffffff">Senderos</h1>
+		                <p style="font-size:16px; color: #ffffff">Ingrese sus credenciales</p>
 		            
 	                </div>
-		        	<div class="media pad-top bord-top"></div>
 
 		            
 		            @if(Session::has('info'))
@@ -86,13 +85,15 @@
 		            </form>
 		            <br>
 		            @if(Session::has('msg'))
+		            <div class="text-center text-muted mb-8">
 		            	<div class="alert {{ Session::get('msg.class') }}">{!! Session::get('msg.text') !!}</div>
 		            @endif
 		            {!! $errors->first('email', '<div class="alert alert-danger">:message</div>') !!}
 		        </div>
 
-		        <div class="pad-all">
-		            <a href="{{ route('password.request') }}" class="btn-link mar-rgt">Olvidó su contraseña?</a>
+		        	<div class="text-center text-muted mb-3">
+		            <a href="{{ route('password.request') }}" class="btn-link mar-rgt">¿Olvidó su contraseña?</a>
+		            <div class="text-center text-muted mb-12">
 		            <a href="{{ route('register') }}" class="btn-link mar-lft"><strong>Registrarse</strong></a>
 		            <div class="media pad-top bord-top">
 		                <div class="media-body text-center text-bold text-main">
