@@ -15,6 +15,14 @@ use App\InterseccionSobseMejoramiento;
 use App\Events\EventUserLog;
 use App\Log;
 
+use App\SenderoSosEscolar;
+use App\SenderoSosLibreSegura;
+use App\SenderoSosMigracionLed;
+use App\SenderoIztapalapa;
+use App\SenderoC51;
+use App\SenderoC52;
+use App\SenderoSSC;
+
 class HomeController extends Controller
 {
     /**
@@ -55,6 +63,175 @@ class HomeController extends Controller
     }
 
     public function getlayers(){
+        $SenderoSosEscolar = SenderoSosEscolar::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'SOBSE',
+                                        'perfil' => 'Senderos Escolares SOS',
+                                        'tipo' => $i->tipo,
+                                        'estatus' => $i->estatus,
+                                        'num' => $i->num,
+                                        'nombre' => $i->nombre,
+                                        'ubicacion' => $i->ubicacion,
+                                        'ubicacion2' => $i->ubicacion2,
+                                        'long' => $i->long,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray();
+        $SenderoSosLibreSegura = SenderoSosLibreSegura::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'SOBSE',
+                                        'perfil' => 'Senderos Camina libre, camina segura SOS',
+                                        'tipo' => $i->tipo,
+                                        'estatus' => $i->estatus,
+                                        'num' => $i->num,
+                                        'nombre' => $i->nombre,
+                                        'ubicacion' => $i->ubicacion,
+                                        'ubicacion2' => $i->ubicacion2,
+                                        'long' => $i->long,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray();     
+        $SenderoSosMigracionLed = SenderoSosMigracionLed::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'SOBSE',
+                                        'perfil' => 'Senderos Migración LED SOS',
+                                        'tipo' => $i->tipo,
+                                        'estatus' => $i->estatus,
+                                        'num' => $i->num,
+                                        'nombre' => $i->nombre,
+                                        'ubicacion' => $i->ubicacion,
+                                        'ubicacion2' => $i->ubicacion2,
+                                        'long' => $i->long,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray(); 
+        $SenderoIztapalapa = SenderoIztapalapa::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'estado','dt','longitud')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'Iztapalapa',
+                                        'perfil' => 'Senderos Iztapalapa',
+                                        'estatus' => $i->estado,
+                                        'nombre' => $i->dt,
+                                        'long' => $i->longitud,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray(); 
+        $SenderoC51 = SenderoC51::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'direccion')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'C5',
+                                        'tipo' => 'Cámaras C5 - Camina libre, camina segura (1235)',
+                                        'nombre' => $i->direccion,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'Point',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray();
+        $SenderoC52 = SenderoC52::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'direccion')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'C5',
+                                        'tipo' => 'Cámaras C5 - Otros Senderos (341)',
+                                        'nombre' => $i->direccion,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'Point',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray();
+        $SenderoSSC = SenderoSSC::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'calle_prin','sector')
+                            ->get()
+                            ->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'SSC',
+                                        'perfil' => 'Corredores SSC - Centro',
+                                        'nombre' => $i->calle_prin,
+                                        'sector' => $i->sector,
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates
+                                    ],
+
+                                ];
+                            })->toArray();
+
         $alcaldias = MunicipalityMap::select(\DB::raw('ST_AsGeoJSON(wkb_geometry) as geo'), 'name')
                                         ->where('entidad',9)
                                         ->get()
@@ -103,7 +280,7 @@ class HomeController extends Controller
 
                                 ];
                             })->toArray();
-        $sobse = SenderoSobse::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
+        /*$sobse = SenderoSobse::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'tipo','estatus','num','nombre','ubicacion','ubicacion2','long')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
                                 $id = 'mun_'.str_random(10);
@@ -130,7 +307,7 @@ class HomeController extends Controller
 
                                 ];
                             })->toArray();
-
+        */
         $camaras = SenderoCamaras::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nombre','tipo_p')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
@@ -179,7 +356,7 @@ class HomeController extends Controller
 
         $polygons = json_encode([
             'type'     => 'FeatureCollection',
-            'features' => array_merge($sobse,$alcaldias,$camaras,$mejoramiento,$interseccion),
+            'features' => array_merge($alcaldias,$camaras,$mejoramiento,$interseccion,$SenderoSosEscolar,$SenderoSosLibreSegura,$SenderoSosMigracionLed,$SenderoIztapalapa,$SenderoC51,$SenderoC52,$SenderoSSC),
         ]);
 
         return $polygons;

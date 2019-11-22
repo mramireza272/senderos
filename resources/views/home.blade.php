@@ -59,6 +59,10 @@ var interseccion = L.layerGroup().addTo(map);
 var camaras = L.layerGroup().addTo(map);
 var sobse = L.layerGroup().addTo(map);
 var mejoramiento = L.layerGroup().addTo(map);
+var c5 = L.layerGroup().addTo(map);
+var iztapalapa = L.layerGroup().addTo(map);
+var ssc = L.layerGroup().addTo(map);
+
 alcaldia.setZIndex(1);
 camaras.setZIndex(2);
 sobse.setZIndex(5);
@@ -70,7 +74,10 @@ let layerControl = {
   'Cámaras': camaras,
   '<span style="color: blue; font-size: 20px"><b>─</b> </span> Senderos SOBSE': sobse,
   '<span style="color: green; font-size: 20px"><b>─</b> </span> Senderos Mejoramiento Barrial': mejoramiento,
-  '<span style="color: red; font-size: 20px"><b>─</b> </span> Intersección SOBSE - Mejoramiento': interseccion // an option to show or hide the layer you created from geojson
+  '<span style="color: red; font-size: 20px"><b>─</b> </span> Intersección SOBSE - Mejoramiento': interseccion,
+  'C5': c5,
+  '<span style="color: yellow; font-size: 20px"><b>─</b> </span>Senderos Iztapalapa': iztapalapa,
+  '<span style="color: purple; font-size: 20px"><b>─</b> </span>Corredores SSC - Centro': ssc,// an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
 
@@ -222,6 +229,46 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '</div>' +
                     '</div>'; 
                 layer.bindPopup(popupContent).addTo(mejoramiento);
+            }else if(feature.properties.Description == 'Iztapalapa'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos Iztapalapa</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li>'+feature.properties.estado+'</li>'+
+                    '<li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
+                    '<li><b>Longitud: </b>'+feature.properties.long+' Kms.</li>'+
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(iztapalapa);
+            }else if(feature.properties.Description == 'SSC'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">Corredores SSC - Centro</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li>'+feature.properties.nombre+'</li>'+
+                    '<li><b>Sector: </b>'+feature.properties.sector+'</li>'+
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(ssc);
+            }else if(feature.properties.Description == 'C5'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">C5</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li>'+feature.properties.tipo+'</li>'+
+                    '<li><b>Ubicación: </b>'+feature.properties.nombre+'</li>'
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(c5);
             }
 
             layer.bindPopup(popupContent);
@@ -233,8 +280,9 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 case 'Camaras':   return {fillColor: "brown", color: "brown", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'Mejoramiento':   return {fillColor: "green", color: "green", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'Interseccion':   return {fillColor: "red", color: "red", weight: 6, opacity: 1, fillOpacity: 0.35};
-               
-                
+                case 'c5':   return {fillColor: "brown", color: "brown", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Iztapalapa' :return {fillColor: "yellow", color: "yellow", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'SSC' :return {fillColor: "purple", color: "purple", weight: 6, opacity: 1, fillOpacity: 0.35};
             }
         }
 });
