@@ -60,6 +60,7 @@ var camaras = L.layerGroup().addTo(map);
 var sobse = L.layerGroup().addTo(map);
 var mejoramiento = L.layerGroup().addTo(map);
 var c5 = L.layerGroup().addTo(map);
+var c5buffer = L.layerGroup().addTo(map);
 var iztapalapa = L.layerGroup().addTo(map);
 var ssc = L.layerGroup().addTo(map);
 
@@ -71,13 +72,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 L.control.scale().addTo(map);
 let layerControl = {
   '<span style="color: black; font-size: 20px"><b>─</b> </span> Alcaldias (División Geografica)':alcaldia,
-  'Cámaras': camaras,
   '<span style="color: blue; font-size: 20px"><b>─</b> </span> Senderos SOBSE': sobse,
   '<span style="color: green; font-size: 20px"><b>─</b> </span> Senderos Mejoramiento Barrial': mejoramiento,
   '<span style="color: red; font-size: 20px"><b>─</b> </span> Intersección SOBSE - Mejoramiento': interseccion,
   'C5': c5,
+  'Alcance C5':c5buffer,
   '<span style="color: yellow; font-size: 20px"><b>─</b> </span>Senderos Iztapalapa': iztapalapa,
-  '<span style="color: purple; font-size: 20px"><b>─</b> </span>Corredores SSC - Centro': ssc,// an option to show or hide the layer you created from geojson
+  '<span style="color: purple; font-size: 20px"><b>─</b> </span>Corredores SSC': ssc,// an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
 
@@ -250,8 +251,10 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '<h4 id="firstHeading" class="firstHeading">Corredores SSC - Centro</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
-                    '<ul><li>'+feature.properties.nombre+'</li>'+
+                    '<ul><li><b>Calle: </b>'+feature.properties.nombre+'</li>'+
                     '<li><b>Sector: </b>'+feature.properties.sector+'</li>'+
+                    '<li><b>Cuadrante: </b>'+feature.properties.cuadrante+'</li>'+
+                    '<li><b>Colonia: </b>'+feature.properties.colonia+'</li>'+
                     '</p>' +
                     '</div>' +
                     '</div>'; 
@@ -269,6 +272,19 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '</div>' +
                     '</div>'; 
                 layer.bindPopup(popupContent).addTo(c5);
+            }else if(feature.properties.Description == 'C5buffer'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">C5</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li><b>Vialidad: </b>'+feature.properties.vialidad+'</li>'+
+                    '<li><b>Longitud: </b>'+feature.properties.long+'</li>'
+                    '</p>' +
+                    '</div>' +
+                    '</div>'; 
+                layer.bindPopup(popupContent).addTo(c5buffer);
             }
 
             layer.bindPopup(popupContent);
@@ -283,6 +299,7 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 case 'c5':   return {fillColor: "brown", color: "brown", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'Iztapalapa' :return {fillColor: "yellow", color: "yellow", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'SSC' :return {fillColor: "purple", color: "purple", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'C5buffer' :return {fillColor: "violet", color: "violet", weight: 6, opacity: 1, fillOpacity: 0.35};
             }
         }
 });

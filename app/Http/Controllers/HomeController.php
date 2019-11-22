@@ -22,6 +22,7 @@ use App\SenderoIztapalapa;
 use App\SenderoC51;
 use App\SenderoC52;
 use App\SenderoSSC;
+use App\BufferCaminaSegura;
 
 class HomeController extends Controller
 {
@@ -209,7 +210,28 @@ class HomeController extends Controller
 
                                 ];
                             })->toArray();
-        $SenderoSSC = SenderoSSC::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'calle_prin','sector')
+        $bufferC5 = BufferCaminaSegura::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'vialidad','long_mts')
+                                        ->get()
+                                        ->map(function($i) use(&$idFeatures){
+                                            $id = 'mun_'.str_random(10);
+                                            $idFeatures['municipality'][] = $id; 
+                                            return [
+                                                'type'    => 'Feature',
+                                                'id'      => $id,
+                                                'properties' => [
+                                                    'fillOpacity'=> '0.35',
+                                                    'Description' => 'C5buffer',
+                                                    'vialidad' => $i->vialidad,
+                                                    'long' => $i->long_mts
+                                                ],
+                                                'geometry'  => [
+                                                    'type'        => 'Polygon',
+                                                    'coordinates' => json_decode($i->geo)->coordinates[0]
+                                                ],
+
+                                            ];
+                                        })->toArray();
+        $SenderoSSC = SenderoSSC::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'calle_prin','sector','cuadrante_','colonia_1')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
                                 $id = 'mun_'.str_random(10);
@@ -223,15 +245,20 @@ class HomeController extends Controller
                                         'perfil' => 'Corredores SSC - Centro',
                                         'nombre' => $i->calle_prin,
                                         'sector' => $i->sector,
+                                        'cuadrante'=> $i->cuadrante_,
+                                        'colonia' => $i->colonia_1
+                                        
                                     ],
                                     'geometry'  => [
                                         'type'        => 'MultiLineString',
-                                        'coordinates' => json_decode($i->geo)->coordinates
+                                        'coordinates' => json_decode($i->geo)->coordinates,
+                                        
                                     ],
 
                                 ];
                             })->toArray();
 
+        
         $alcaldias = MunicipalityMap::select(\DB::raw('ST_AsGeoJSON(wkb_geometry) as geo'), 'name')
                                         ->where('entidad',9)
                                         ->get()
@@ -307,7 +334,7 @@ class HomeController extends Controller
 
                                 ];
                             })->toArray();
-        */
+        
         $camaras = SenderoCamaras::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nombre','tipo_p')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
@@ -329,7 +356,7 @@ class HomeController extends Controller
 
                                 ];
                             })->toArray();
-
+        */
         $mejoramiento = SenderoMejoramiento::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'nomvial','sentido','tipovial')
                             ->get()
                             ->map(function($i) use(&$idFeatures){
@@ -356,7 +383,7 @@ class HomeController extends Controller
 
         $polygons = json_encode([
             'type'     => 'FeatureCollection',
-            'features' => array_merge($alcaldias,$camaras,$mejoramiento,$interseccion,$SenderoSosEscolar,$SenderoSosLibreSegura,$SenderoSosMigracionLed,$SenderoIztapalapa,$SenderoC51,$SenderoC52,$SenderoSSC),
+            'features' => array_merge($alcaldias,$mejoramiento,$interseccion,$SenderoSosEscolar,$SenderoSosLibreSegura,$SenderoSosMigracionLed,$SenderoIztapalapa,$SenderoC51,$SenderoC52,$SenderoSSC,$bufferC5),
         ]);
 
         return $polygons;
