@@ -248,7 +248,7 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
                     '</div>' +
-                    '<h4 id="firstHeading" class="firstHeading">Corredores SSC - Centro</h4>' +
+                    '<h4 id="firstHeading" class="firstHeading">Corredores SSC</h4>' +
                     '<div id="bodyContent">' +
                     '<p>' +
                     '<ul><li><b>Calle: </b>'+feature.properties.nombre+'</li>'+
