@@ -23,6 +23,7 @@ use App\SenderoC51;
 use App\SenderoC52;
 use App\SenderoSSC;
 use App\BufferCaminaSegura;
+use App\SenderoCuauhtemoc;
 
 class HomeController extends Controller
 {
@@ -258,7 +259,6 @@ class HomeController extends Controller
                                 ];
                             })->toArray();
 
-        
         $alcaldias = MunicipalityMap::select(\DB::raw('ST_AsGeoJSON(wkb_geometry) as geo'), 'name')
                                         ->where('entidad',9)
                                         ->get()
@@ -381,9 +381,43 @@ class HomeController extends Controller
                                 ];
                             })->toArray();
 
+        $SenderoCuauhtemoc = SenderoCuauhtemoc::select(\DB::raw('ST_AsGeoJSON(geom) as geo'), 'name')
+                            ->get()->map(function($i){
+                                $i->geo = json_decode($i->geo);
+                                $i->geo->coordinates = collect($i->geo->coordinates)->map(function($j){
+                                    return collect($j)->map(function($k){
+                                        return collect($k)->map(function($m){
+                                            array_pop($m);
+                                            return $m;
+                                        });
+                                    });
+                                });
+                                $i->geo = json_encode($i->geo);
+                                return $i;
+                            })->map(function($i) use(&$idFeatures){
+                                $id = 'mun_'.str_random(10);
+                                $idFeatures['municipality'][] = $id; 
+                                return [
+                                    'type'    => 'Feature',
+                                    'id'      => $id,
+                                    'properties' => [
+                                        'fillOpacity'=> '0.35',
+                                        'Description' => 'Cuauhtemoc',
+                                        'perfil' => 'Senderos Cuauhtemoc',
+                                        'estatus' => '',
+                                        'nombre' => $i->name,
+                                        'long' => '',
+                                    ],
+                                    'geometry'  => [
+                                        'type'        => 'MultiLineString',
+                                        'coordinates' => json_decode($i->geo)->coordinates[0]
+                                    ],
+
+                                ];
+                            })->toArray();
         $polygons = json_encode([
             'type'     => 'FeatureCollection',
-            'features' => array_merge($alcaldias,$mejoramiento,$interseccion,$SenderoSosEscolar,$SenderoSosLibreSegura,$SenderoSosMigracionLed,$SenderoIztapalapa,$SenderoC51,$SenderoC52,$SenderoSSC,$bufferC5),
+            'features' => array_merge($alcaldias,$mejoramiento,$interseccion,$SenderoSosEscolar,$SenderoSosLibreSegura,$SenderoSosMigracionLed,$SenderoIztapalapa,$SenderoC51,$SenderoC52,$SenderoSSC,$bufferC5,$SenderoCuauhtemoc),
         ]);
 
         return $polygons;

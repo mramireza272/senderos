@@ -62,6 +62,7 @@ var mejoramiento = L.layerGroup().addTo(map);
 var c5 = L.layerGroup().addTo(map);
 var c5buffer = L.layerGroup().addTo(map);
 var iztapalapa = L.layerGroup().addTo(map);
+var cuauhtemoc = L.layerGroup().addTo(map);
 var ssc = L.layerGroup().addTo(map);
 
 alcaldia.setZIndex(1);
@@ -78,6 +79,7 @@ let layerControl = {
   'C5': c5,
   'Alcance C5':c5buffer,
   '<span style="color: yellow; font-size: 20px"><b>─</b> </span>Senderos Iztapalapa': iztapalapa,
+  '<span style="color: navy; font-size: 20px"><b>─</b> </span>Senderos Cuauhtemoc': cuauhtemoc,
   '<span style="color: purple; font-size: 20px"><b>─</b> </span>Corredores SSC': ssc,// an option to show or hide the layer you created from geojson
 }
 L.control.layers({},layerControl, {position: 'topleft'} ).addTo( map );
@@ -152,6 +154,7 @@ function populate(locations){
     }
   }
 }
+
 var geojson = L.geoJSON({!! $polygons !!}, {
         onEachFeature: function (feature, layer) {
             if(feature.properties.Description == 'Alcaldia'){
@@ -244,6 +247,20 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                     '</div>' +
                     '</div>'; 
                 layer.bindPopup(popupContent).addTo(iztapalapa);
+            }else if(feature.properties.Description == 'Cuauhtemoc'){
+                popupContent = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h4 id="firstHeading" class="firstHeading">Senderos Cuauhtemoc</h4>' +
+                    '<div id="bodyContent">' +
+                    '<p>' +
+                    '<ul><li>'+feature.properties.estado+'</li>'+
+                    '<li><b>Nombre: </b>'+feature.properties.nombre+'</li>'+
+                    '<li><b>Longitud: </b>'+feature.properties.long+' Kms.</li>'+
+                    '</p>' +
+                    '</div>' +
+                    '</div>';
+                layer.bindPopup(popupContent).addTo(cuauhtemoc);
             }else if(feature.properties.Description == 'SSC'){
                 popupContent = '<div id="content">' +
                     '<div id="siteNotice">' +
@@ -298,6 +315,7 @@ var geojson = L.geoJSON({!! $polygons !!}, {
                 case 'Interseccion':   return {fillColor: "red", color: "red", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'c5':   return {fillColor: "brown", color: "brown", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'Iztapalapa' :return {fillColor: "yellow", color: "yellow", weight: 6, opacity: 1, fillOpacity: 0.35};
+                case 'Cuauhtemoc' :return {fillColor: "#1D2951", color: "#1D2951", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'SSC' :return {fillColor: "purple", color: "purple", weight: 6, opacity: 1, fillOpacity: 0.35};
                 case 'C5buffer' :return {fillColor: "violet", color: "violet", weight: 6, opacity: 1, fillOpacity: 0.35};
             }
